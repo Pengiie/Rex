@@ -1,6 +1,7 @@
 package com.Penguinz22.Rex;
 
 import com.Penguinz22.Rex.backend.Window;
+import com.Penguinz22.Rex.graphics.Mesh;
 import com.Penguinz22.Rex.listeners.ApplicationListener;
 import com.Penguinz22.Rex.utils.Disposable;
 import org.lwjgl.PointerBuffer;
@@ -81,6 +82,9 @@ public class Application implements Disposable {
     public void dispose() {
         if(Core.assets != null)
             Core.assets.dispose();
+        if(Core.renderer != null)
+            Core.renderer.dispose();
+        Mesh.disposeMeshes();
     }
 
 }
