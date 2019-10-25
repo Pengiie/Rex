@@ -45,6 +45,18 @@ public class Mesh implements Disposable {
         GL30.glBindVertexArray(0);
     }
 
+    public void enableVertexArrays() {
+        for(int i=0;i<attribCount;i++) {
+            GL30.glEnableVertexAttribArray(i);
+        }
+    }
+
+    public void disableVertexArrays() {
+        for(int i=0;i<attribCount;i++) {
+            GL30.glDisableVertexAttribArray(i);
+        }
+    }
+
     public void bindAttribute(VertexAttribute attribute) {
         int vboHandle = GL15.glGenBuffers();
         bufferObjects.add(vboHandle);
@@ -59,6 +71,10 @@ public class Mesh implements Disposable {
 
     public int getAttribCount() {
         return attribCount;
+    }
+
+    public int getVertexCount() {
+        return vertexCount;
     }
 
     public static void disposeMeshes() {

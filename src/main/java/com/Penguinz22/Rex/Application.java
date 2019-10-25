@@ -37,6 +37,7 @@ public class Application implements Disposable {
                 running = false;
             window.update();
             listener.update();
+            listener.render();
         }
     }
 
@@ -49,6 +50,8 @@ public class Application implements Disposable {
         final Window window = new Window(listener, config);
         long windowHandle = createGlfwWindow(config);
         window.create(windowHandle);
+        Window.width = config.windowWidth;
+        Window.height = config.windowHeight;
         window.setVisible(true);
         return window;
     }

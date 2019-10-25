@@ -6,8 +6,11 @@ import com.Penguinz22.Rex.listeners.ApplicationListener;
 import com.Penguinz22.Rex.listeners.WindowListener;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWWindowCloseCallback;
+import org.lwjgl.opengl.GL11;
 
 public class Window {
+
+    public static int width, height;
 
     private long windowHandle;
     private ApplicationListener listener;

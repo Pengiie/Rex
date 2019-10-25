@@ -1,5 +1,7 @@
 package com.Penguinz22.Rex.utils;
 
+import org.joml.Vector4f;
+
 import javax.swing.text.AttributeSet;
 
 public class Color {
@@ -42,6 +44,13 @@ public class Color {
         else if(a > 1)
             a = 1;
         return this;
+    }
+
+    public Color clone() {
+        return new Color(r, g, b, a);
+    }
+    public Vector4f toVector4f() {
+        return new Vector4f(r, g, b, a);
     }
 
 }

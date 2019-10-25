@@ -3,6 +3,7 @@ package com.Penguinz22.Rex.assets;
 import com.Penguinz22.Rex.utils.Disposable;
 import com.Penguinz22.Rex.utils.texture.TextureData;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 
 public class Texture implements Disposable {
 
@@ -31,6 +32,15 @@ public class Texture implements Disposable {
 
     public int getTextureId() {
         return textureId;
+    }
+
+    public void bind() {
+        GL11.glBindTexture(this.textureTarget, this.textureId);
+    }
+
+    public void bind(int unit) {
+        GL30.glActiveTexture(GL30.GL_TEXTURE0 + unit);
+        bind();
     }
 
     @Override
