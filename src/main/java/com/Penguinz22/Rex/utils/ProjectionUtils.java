@@ -1,6 +1,5 @@
 package com.Penguinz22.Rex.utils;
 
-import com.Penguinz22.Rex.backend.Window;
 import org.joml.Matrix4f;
 
 public class ProjectionUtils {

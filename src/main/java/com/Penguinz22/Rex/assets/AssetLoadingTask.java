@@ -51,6 +51,7 @@ public class AssetLoadingTask implements AsyncTask<Void> {
                 try {
                     loadFuture.get();
                 } catch (Exception e) {
+                    e.printStackTrace();
                     throw new RuntimeException("Couldn't load asset: "+assetDescriptor.filePath);
                 }
                 asset = loader.loadSync(assetManager, assetDescriptor.filePath, assetDescriptor.params);

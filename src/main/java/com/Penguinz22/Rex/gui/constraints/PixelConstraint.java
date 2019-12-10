@@ -1,21 +1,24 @@
 package com.Penguinz22.Rex.gui.constraints;
 
-import com.Penguinz22.Rex.gui.GuiComponent;
-
 /**
- * Applies value based off of pixels from the bottom left corner of the screen
+ * Applies value based off of pixels from the bottom left corner of the parent component
+ * Should use for x and y values
  */
-public class AbsoluteConstraint extends Constraint {
+public class PixelConstraint extends Constraint {
 
-    private float pixelsX, pixelsY;
+    private float pixels;
 
-    public AbsoluteConstraint(float pixelsX, float pixelsY) {
-        this.pixelsX = pixelsX;
-        this.pixelsY = pixelsY;
+    public PixelConstraint(float pixels) {
+        this.pixels = pixels;
     }
 
     @Override
-    public void update(GuiComponent superComponent) {
-        
+    public void update(GuiConstraints constraints, GuiConstraints parentConstraints) {
+        this.value = getMatchingParentConstraint(constraints, parentConstraints).getValue() + pixels;
+    }
+
+    @Override
+    public Constraint clone() {
+        return new PixelConstraint(pixels);
     }
 }

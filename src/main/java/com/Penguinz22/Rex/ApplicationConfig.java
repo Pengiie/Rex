@@ -33,6 +33,15 @@ public class ApplicationConfig {
         this.windowY = windowY;
     }
 
+    public void setWindowSize(int width, int height) {
+        this.windowWidth = width;
+        this.windowHeight = height;
+    }
+
+    public void setWindowResizable(boolean windowResizable) {
+        this.windowResizable = windowResizable;
+    }
+
     public void setWindowListener(WindowListener windowListener) {
         this.windowListener = windowListener;
     }

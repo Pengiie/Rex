@@ -2,6 +2,7 @@ package com.Penguinz22.Rex.graphics;
 
 import com.Penguinz22.Rex.utils.Disposable;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL20;
@@ -10,6 +11,7 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import java.io.*;
+import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.Arrays;
@@ -22,6 +24,7 @@ public class Shader implements Disposable {
 
     public static final String COLOR_UNIFORM = "u_color";
     public static final String COMBINED_MATRIX_UNIFORM = "u_combinedMatrix";
+    public static final String TEXTURE_SAMPLER = "u_textureSampler";
 
     private int programHandle;
     private int vertexHandle;
@@ -68,6 +71,18 @@ public class Shader implements Disposable {
         GL20.glUniform1f(uniforms.get(uniformName), value);
     }
 
+    public void setUniformBool(String uniformName, boolean value) {
+        if(!hasUniformName(uniformName))
+            return;
+        GL20.glUniform1i(uniforms.get(uniformName), value ? 1 : 0);
+    }
+
+    public void setUniformVec2f(String uniformName, Vector2f value) {
+        if(!hasUniformName(uniformName))
+            return;
+        GL20.glUniform2f(uniforms.get(uniformName), value.x, value.y);
+    }
+
     public void setUniformVec4f(String uniformName, Vector4f value) {
         if(!hasUniformName(uniformName))
             return;
@@ -95,7 +110,7 @@ public class Shader implements Disposable {
             IntBuffer type = stack.mallocInt(1);
             for (int i = 0; i < uniformCount; i++) {
                 size.put(0, 1);
-                type.clear();
+                ((Buffer)type).clear();
                 String name = GL20.glGetActiveUniform(programHandle, i, size, type);
                 int location = GL20.glGetUniformLocation(programHandle, name);
                 uniforms.put(name, location);

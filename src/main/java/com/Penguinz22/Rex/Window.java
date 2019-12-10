@@ -1,13 +1,16 @@
-package com.Penguinz22.Rex.backend;
+package com.Penguinz22.Rex;
 
 import com.Penguinz22.Rex.Application;
 import com.Penguinz22.Rex.ApplicationConfig;
 import com.Penguinz22.Rex.Core;
 import com.Penguinz22.Rex.listeners.ApplicationListener;
 import com.Penguinz22.Rex.listeners.WindowListener;
+import com.Penguinz22.Rex.utils.CursorType;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWWindowCloseCallback;
+import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.system.Callback;
 
 public class Window {
 
@@ -25,20 +28,65 @@ public class Window {
         }
     };
 
+    private boolean resizedYet = false;
+    private final GLFWWindowSizeCallback resizeCallback = new GLFWWindowSizeCallback() {
+        @Override
+        public void invoke(long window, int width, int height) {
+            if(!resizedYet) {
+                resizedYet = true;
+                return;
+            }
+            updateSizeFields(width, height);
+            GL11.glViewport(0, 0, width, height);
+            listener.resize(width, height);
+        }
+    };
+
+    private long normalCursor;
+    private long handCursor;
+    private long textInputCursor;
+
     public Window(ApplicationListener listener, ApplicationConfig config) {
         this.listener = listener;
         this.config = config;
         this.windowListener = config.getWindowListener();
+        updateSizeFields(config.windowWidth, config.windowHeight);
+    }
+
+    private void updateSizeFields(int width, int height) {
+        this.width = width;
+        this.height = height;
     }
 
     public void create(long windowHandle) {
         this.windowHandle = windowHandle;
         Core.window = this;
         GLFW.glfwSetWindowCloseCallback(windowHandle, closeCallback);
+        GLFW.glfwSetWindowSizeCallback(windowHandle, resizeCallback);
+
+        Core.input = new InputManager(windowHandle);
+        Core.input.setCallbacks(windowHandle);
+
+        createCursors();
 
         if(windowListener != null){
             windowListener.created();
         }
+    }
+
+    private void createCursors() {
+        this.normalCursor = GLFW.glfwCreateStandardCursor(CursorType.NORMAL.getGlfwEquivalent());
+        this.handCursor = GLFW.glfwCreateStandardCursor(CursorType.SELECT_HAND.getGlfwEquivalent());
+        this.textInputCursor = GLFW.glfwCreateStandardCursor(CursorType.TEXT_INPUT.getGlfwEquivalent());
+    }
+
+    public void setCursor(CursorType type) {
+        if(type == CursorType.NORMAL)
+            GLFW.glfwSetCursor(windowHandle, normalCursor);
+        else if(type == CursorType.SELECT_HAND)
+            GLFW.glfwSetCursor(windowHandle, handCursor);
+        else if(type == CursorType.TEXT_INPUT)
+            GLFW.glfwSetCursor(windowHandle, textInputCursor);
     }
 
     public void setVisible(boolean visible) {
@@ -66,4 +114,11 @@ public class Window {
         return GLFW.glfwWindowShouldClose(windowHandle);
     }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
 }

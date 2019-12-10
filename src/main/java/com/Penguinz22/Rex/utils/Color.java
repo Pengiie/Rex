@@ -6,6 +6,20 @@ import javax.swing.text.AttributeSet;
 
 public class Color {
 
+    public static final Color white = new Color(1, 1, 1, 1);
+    public static final Color black = new Color(0, 0, 0, 0);
+
+    public static final Color red = new Color(1, 0, 0, 1);
+    public static final Color green = new Color(0, 1, 0, 1);
+    public static final Color blue = new Color(0, 0, 1, 1);
+
+    public static final Color yellow = new Color(1, 1, 0, 1);
+    public static final Color cyan = new Color(0, 1, 1, 1);
+    public static final Color magenta = new Color(1, 0, 1, 1);
+
+    public static final Color orange = new Color(1, 0.647f, 0, 1);
+
+
     public float r, g, b, a;
 
     public Color(float r, float g, float b, float a) {
@@ -51,6 +65,26 @@ public class Color {
     }
     public Vector4f toVector4f() {
         return new Vector4f(r, g, b, a);
+    }
+
+    public Color setRed(float red) {
+        this.r = red;
+        return this;
+    }
+
+    public Color setGreen(float green) {
+        this.g = green;
+        return this;
+    }
+
+    public Color setBlue(float blue) {
+        this.b = blue;
+        return this;
+    }
+
+    public Color setAlpha(float alpha) {
+        this.a = alpha;
+        return this;
     }
 
 }

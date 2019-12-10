@@ -1,16 +1,13 @@
 package com.Penguinz22.Rex;
 
-import com.Penguinz22.Rex.backend.Window;
+import com.Penguinz22.Rex.graphics.Draw;
 import com.Penguinz22.Rex.graphics.Mesh;
 import com.Penguinz22.Rex.listeners.ApplicationListener;
 import com.Penguinz22.Rex.utils.Disposable;
-import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GLUtil;
 
 public class Application implements Disposable {
 
@@ -26,6 +23,7 @@ public class Application implements Disposable {
         if(this.config.title == null)
             this.config.title = listener.getClass().getSimpleName();
         Core.application = this;
+        Core.timings = new Timings();
         this.window = createWindow(listener, config);
         loop();
         cleanup();
@@ -36,9 +34,15 @@ public class Application implements Disposable {
             if(window.shouldClose())
                 running = false;
             window.update();
+            Core.timings.update();
             listener.update();
             listener.render();
+            Core.input.clearInputs();
         }
+    }
+
+    public void quit() {
+        running = false;
     }
 
     private void cleanup() {
@@ -50,8 +54,6 @@ public class Application implements Disposable {
         final Window window = new Window(listener, config);
         long windowHandle = createGlfwWindow(config);
         window.create(windowHandle);
-        Window.width = config.windowWidth;
-        Window.height = config.windowHeight;
         window.setVisible(true);
         return window;
     }
@@ -81,12 +83,19 @@ public class Application implements Disposable {
         return windowHandle;
     }
 
+    public void shutdownApplication() {
+        Core.application.running = false;
+    }
+
     @Override
     public void dispose() {
         if(Core.assets != null)
             Core.assets.dispose();
         if(Core.renderer != null)
             Core.renderer.dispose();
+        if(Core.guiRenderer != null)
+            Core.guiRenderer.dispose();
+        listener.dispose();
         Mesh.disposeMeshes();
     }
 

@@ -1,9 +1,8 @@
 package com.Penguinz22.Rex.assets;
 
-import com.Penguinz22.Rex.assets.loaders.AssetLoader;
-import com.Penguinz22.Rex.assets.loaders.AssetLoaderParameter;
-import com.Penguinz22.Rex.assets.loaders.TextureLoader;
+import com.Penguinz22.Rex.assets.loaders.*;
 
+import javax.security.auth.callback.Callback;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,9 +20,13 @@ public class AssetManager {
     int toLoad = 0;
     int peakTasks = 0;
 
+    private List<AssetLoadedCallback> loadedCallbacks = new ArrayList<>();
+
     public AssetManager(boolean defaultLoaders) {
         if(defaultLoaders) {
             setLoader(Texture.class, new TextureLoader());
+            setLoader(TextureAtlas.class, new TextureAtlasLoader());
+            setLoader(Font.class, new TrueTypeFontLoader());
         }
         this.executor = new AsyncExecutor(1);
     }
@@ -104,6 +107,7 @@ public class AssetManager {
             Thread.yield();
     }
 
+    // Remember to call the update method somewhere
     public synchronized boolean update() {
         try {
             if (tasks.size() == 0) {
@@ -140,6 +144,7 @@ public class AssetManager {
             complete = task.cancel || task.update();
         } catch (RuntimeException ex) {
             task.cancel = true;
+            ex.printStackTrace();
         }
         if(complete) {
             if(tasks.size() == 1) {
@@ -177,6 +182,10 @@ public class AssetManager {
             assets.put(type, typeToAssets);
         }
         typeToAssets.put(filePath, new RefCountedContainer(asset));
+
+        for (AssetLoadedCallback loadedCallback : loadedCallbacks) {
+            loadedCallback.onLoad(filePath, asset);
+        }
     }
 
     private void addTask(AssetDescriptor assetDescriptor) {
@@ -193,6 +202,10 @@ public class AssetManager {
 
     public <T> AssetLoader getLoader(final Class<T> type) {
         return loaders.get(type);
+    }
+
+    public void addAssetLoadCallback(AssetLoadedCallback callback) {
+        this.loadedCallbacks.add(callback);
     }
 
 }

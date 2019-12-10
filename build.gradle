@@ -1,7 +1,4 @@
 apply plugin: 'java'
-apply plugin: 'application'
-
-mainClassName = 'com.Penguinz22.Rex.TEst'
 
 group 'penguinz22'
 version '1.0-SNAPSHOT'
@@ -31,13 +28,4 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
     implementation "org.joml:joml:${jomlVersion}"
-}
-
-jar {
-    manifest {
-        attributes(
-                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
-                'Main-Class': mainClassName
-        )
-    }
 }

@@ -13,28 +13,35 @@ public class Rotation {
         this(Origin.BOTTOM_LEFT, angleOfRotation);
     }
 
-    public Rotation(Vector2f origin, float angleOfRotation) {
-        this.origin = origin;
+    public Rotation(Origin origin, float angleOfRotation) {
+        this.origin = origin.origin;
         this.quaternion = new Quaternionf();
         this.quaternion.fromAxisAngleDeg(new Vector3f(0, 0, 1), -angleOfRotation);
     }
+
     /**
      * Origin in terms of values from 0 to 1
      */
     public static class Origin {
 
-        public static Vector2f BOTTOM_LEFT = new Vector2f(0, 0);
-        public static Vector2f BOTTOM_RIGHT = new Vector2f(1, 0);
-        public static Vector2f TOP_LEFT = new Vector2f(0, 1);
-        public static Vector2f TOP_RIGHT = new Vector2f(1, 1);
+        public static Origin BOTTOM_LEFT = new Origin(0, 0);
+        public static Origin BOTTOM_RIGHT = new Origin(1, 0);
+        public static Origin TOP_LEFT = new Origin(0, 1);
+        public static Origin TOP_RIGHT = new Origin(1, 1);
 
-        public static Vector2f MIDDLE_BOTTOM = new Vector2f(0.5f, 0);
-        public static Vector2f MIDDLE_LEFT = new Vector2f(0, 0.5f);
-        public static Vector2f MIDDLE_RIGHT = new Vector2f(1, 0.5f);
-        public static Vector2f MIDDLE_TOP = new Vector2f(0.5f, 1);
+        public static Origin MIDDLE_BOTTOM = new Origin(0.5f, 0);
+        public static Origin MIDDLE_LEFT = new Origin(0, 0.5f);
+        public static Origin MIDDLE_RIGHT = new Origin(1, 0.5f);
+        public static Origin MIDDLE_TOP = new Origin(0.5f, 1);
 
-        public static Vector2f CENTER = new Vector2f(0.5f, 0.5f);
+        public static Origin CENTER = new Origin(0.5f, 0.5f);
 
+
+        final Vector2f origin;
+
+        public Origin(float x, float y) {
+            this.origin = new Vector2f(x, y);
+        }
 
     }
 

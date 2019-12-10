@@ -1,13 +1,22 @@
 package com.Penguinz22.Rex.assets.loaders;
 
+import com.Penguinz22.Rex.assets.AssetDescriptor;
 import com.Penguinz22.Rex.assets.AssetManager;
 import com.Penguinz22.Rex.assets.Texture;
 import com.Penguinz22.Rex.utils.texture.Format;
 import com.Penguinz22.Rex.utils.texture.TextureData;
 
+import java.util.List;
+
 public class TextureLoader extends AssetLoader<Texture, TextureLoader.TextureParameter> {
 
     TextureLoaderInfo info = new TextureLoaderInfo();
+
+
+    @Override
+    public List<AssetDescriptor> getDependencies(String filePath, TextureParameter assetParameters) {
+        return null;
+    }
 
     @Override
     public void loadAsync(AssetManager assetManager, String filePath, TextureParameter parameter) {
