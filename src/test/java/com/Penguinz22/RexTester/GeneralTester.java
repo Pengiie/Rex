@@ -2,16 +2,12 @@ package com.Penguinz22.RexTester;
 
 import com.Penguinz22.Rex.Application;
 import com.Penguinz22.Rex.ApplicationConfig;
-import com.Penguinz22.Rex.Core;
-import com.Penguinz22.Rex.assets.Font;
 import com.Penguinz22.Rex.graphics.BatchRenderer;
 import com.Penguinz22.Rex.graphics.Draw;
 import com.Penguinz22.Rex.listeners.ApplicationListener;
+import com.Penguinz22.Rex.physics.RigidBody;
 import com.Penguinz22.Rex.utils.Color;
-import com.Penguinz22.Rex.utils.Rotation;
-import com.Penguinz22.Rex.utils.fonts.FontData;
 import org.joml.Vector2i;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +21,29 @@ public class GeneralTester implements ApplicationListener {
     }
 
     private BatchRenderer renderer;
+    private RigidBody ref1;
+    private RigidBody ref2;
 
     @Override
     public void init() {
         this.renderer = new BatchRenderer();
-        Font font = new Font(new FontData("comic.ttf", 512, 512, 64, false));
+        /*Core.physics = new PhysicsManager();
+        Core.assets = new AssetManager(true);
+        Core.assets.load("ratioTest.png", Texture.class);
+        Core.assets.finishLoading();
+        Core.physics.addRigidBody(ref1 = new RigidBody(new Vector2f(50, 50)));
+        ref1.addBoundingBox(new RectBoundingBox(100, 100), VectorUtils.zero);
+        Core.physics.addRigidBody(ref2 = new RigidBody(new Vector2f(300, 300)));
+        ref2.addBoundingBox(new RectBoundingBox(100, 100), VectorUtils.zero);
+        RigidBody floor = new RigidBody( new Vector2f(0, 0));
+        Core.physics.addRigidBody(floor);
+        floor.addBoundingBox(new RectBoundingBox(700, 40), VectorUtils.zero);
+
+        ref1.mass = 1;
+        ref1.gravity = -0.1f;
+        ref2.mass = 1;
+        ref2.gravity = -0.1f;
+        //ref2.friction = 0.05f;*/
     }
 
     @Override
@@ -40,6 +54,20 @@ public class GeneralTester implements ApplicationListener {
     @Override
     public void update() {
         //System.out.println(Core.input.getMousePosX()+" "+Core.input.getMousePosY());
+        /*Core.physics.update();
+        if(Core.input.isKeyDown(Key.KEY_LEFT))
+            ref1.velocity.x+=-0.05f;
+        else if(Core.input.isKeyDown(Key.KEY_RIGHT))
+            ref1.velocity.x +=0.05f;
+        else
+            ref1.velocity.x = 0;
+
+        if(Core.input.isKeyDown(Key.KEY_DOWN))
+            ref1.velocity.y +=-0.05f;
+        else if(Core.input.isKeyDown(Key.KEY_UP))
+            ref1.velocity.y +=0.05f;
+        else
+            ref1.velocity.y = 0;*/
     }
 
     private List<Vector2i> places = new ArrayList<>();
@@ -48,7 +76,11 @@ public class GeneralTester implements ApplicationListener {
     public void render() {
         Draw.clear();
 
-        for(int i=0;i<=360;i++) {
+        renderer.draw(Color.red, (int)ref1.position.x, (int)ref1.position.y, (int)100, (int)100);
+        renderer.draw(Color.blue, (int)ref2.position.x, (int)ref2.position.y, (int)100, (int)100);
+        renderer.draw(Color.green, 0, 0, 700, 40);
+
+        /*for(int i=0;i<=360;i++) {
             renderer.draw(new Color(1, 1, 0, 1), Core.input.getMousePosX(), Core.input.getMousePosY(), 50, 50, new Rotation(Rotation.Origin.BOTTOM_LEFT, i));
         }
 
@@ -60,7 +92,7 @@ public class GeneralTester implements ApplicationListener {
                 renderer.draw(new Color(1, 1, 0, 1), spot.x, spot.y, 50, 50, new Rotation(Rotation.Origin.BOTTOM_LEFT, i));
             }
         }
-
+*/
         renderer.finish();
     }
 }

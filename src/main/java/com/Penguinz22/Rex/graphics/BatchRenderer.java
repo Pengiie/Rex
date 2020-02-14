@@ -2,7 +2,7 @@ package com.Penguinz22.Rex.graphics;
 
 import com.Penguinz22.Rex.Core;
 import com.Penguinz22.Rex.assets.Texture;
-import com.Penguinz22.Rex.Window;
+import com.Penguinz22.Rex.graphics.camera.Camera;
 import com.Penguinz22.Rex.utils.*;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
@@ -18,6 +18,7 @@ public class BatchRenderer implements Disposable {
     private Texture lastTexture;
     private Matrix4f projectionMatrix;
     private Matrix4f combinedMatrix = new Matrix4f();
+    private Camera camera;
 
     private int renderCalls;
     private int totalRenderCalls;
@@ -50,6 +51,14 @@ public class BatchRenderer implements Disposable {
 
     public void draw(Color color, int x, int y, int width, int height, Rotation rotation) {
         draw(null, color, x, y, width, height, rotation);
+    }
+
+    public void draw(Texture texture, int x, int y, int width, int height) {
+        draw(texture, Color.white, x, y, width, height, null);
+    }
+
+    public void draw(Texture texture, int x, int y, int width, int height, Rotation rotation) {
+        draw(texture, Color.white, x, y, width, height, rotation);
     }
 
     public void draw(Texture texture, Color color, int x, int y, int width, int height, Rotation rotation) {
@@ -104,7 +113,7 @@ public class BatchRenderer implements Disposable {
             RenderRequest renderRequest = renderQueue.pop();
 
             resolveMatrices(renderRequest.transformation);
-            shader.setUniformMat4(Shader.COMBINED_MATRIX_UNIFORM, this.combinedMatrix);
+            shader.setUniformMat4(BatchShader.ORTHO_VIEW_TRANSFORMATION_MATRIX, this.combinedMatrix);
 
             shader.setUniformVec2f(BatchShader.TEXTURE_OFFSET_UNIFORM, renderRequest.textureOffset);
             shader.setUniformVec2f(BatchShader.TEXTURE_UNIT_SIZE_UNIFORM, renderRequest.textureSize);
@@ -125,7 +134,19 @@ public class BatchRenderer implements Disposable {
 
     private void resolveMatrices(Matrix4f transformation) {
         this.combinedMatrix.identity();
-        this.combinedMatrix.set(projectionMatrix).mul(transformation);
+        if(camera == null) {
+            this.combinedMatrix.set(projectionMatrix).mul(transformation);
+        } else {
+            this.combinedMatrix.set(camera.getOrthoViewMatrix()).mul(transformation);
+        }
+    }
+
+    public void attachCamera(Camera camera) {
+        this.camera = camera;
+    }
+
+    public Camera getCamera() {
+        return camera;
     }
 
     @Override

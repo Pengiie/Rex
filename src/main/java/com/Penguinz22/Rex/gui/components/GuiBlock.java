@@ -1,7 +1,6 @@
 package com.Penguinz22.Rex.gui.components;
 
 import com.Penguinz22.Rex.gui.GuiRenderer;
-import com.Penguinz22.Rex.gui.constraints.GuiConstraints;
 import com.Penguinz22.Rex.utils.Color;
 
 /**
@@ -11,6 +10,7 @@ public class GuiBlock extends GuiComponent {
 
     public GuiBlock(Color color) {
         setColor(color);
+        setAlpha(color.a);
     }
 
     @Override

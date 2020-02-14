@@ -2,7 +2,6 @@ package com.Penguinz22.Rex.assets;
 
 import com.Penguinz22.Rex.assets.loaders.*;
 
-import javax.security.auth.callback.Callback;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +10,7 @@ import java.util.Stack;
 public class AssetManager {
 
     final HashMap<Class, HashMap<String, RefCountedContainer>> assets = new HashMap<>();
+    final HashMap<String, List<String>> assetDependencies = new HashMap<>();
     final HashMap<Class, AssetLoader> loaders = new HashMap<>();
     final List<AssetDescriptor> loadQueue = new ArrayList<>();
     final HashMap<String, Class> assetTypes = new HashMap<>();
@@ -27,6 +27,7 @@ public class AssetManager {
             setLoader(Texture.class, new TextureLoader());
             setLoader(TextureAtlas.class, new TextureAtlasLoader());
             setLoader(Font.class, new TrueTypeFontLoader());
+            setLoader(TilemapData.class, new TilemapLoader());
         }
         this.executor = new AsyncExecutor(1);
     }
@@ -185,6 +186,25 @@ public class AssetManager {
 
         for (AssetLoadedCallback loadedCallback : loadedCallbacks) {
             loadedCallback.onLoad(filePath, asset);
+        }
+    }
+
+    public void injectDependencies(String parentFileName, AssetDescriptor... dependenciesToInject) {
+        for (AssetDescriptor dependency : dependenciesToInject) {
+            List<String> dependencies = assetDependencies.get(parentFileName);
+            if(dependencies == null) {
+                dependencies = new ArrayList<>();
+                assetDependencies.put(parentFileName,dependencies);
+            }
+            dependencies.add(dependency.filePath);
+
+            if(isLoaded(dependency.filePath)) {
+                Class type = assetTypes.get(dependency.filePath);
+                RefCountedContainer assetReference = assets.get(type).get(dependency.filePath);
+                assetReference.incRefCount();
+            } else {
+                addTask(dependency);
+            }
         }
     }
 

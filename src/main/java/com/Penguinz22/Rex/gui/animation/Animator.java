@@ -2,9 +2,7 @@ package com.Penguinz22.Rex.gui.animation;
 
 import com.Penguinz22.Rex.Core;
 import com.Penguinz22.Rex.gui.components.GuiComponent;
-import com.Penguinz22.Rex.gui.constraints.GuiConstraints;
 
-import java.lang.annotation.ElementType;
 import java.util.HashMap;
 
 public class Animator {
@@ -44,16 +42,7 @@ public class Animator {
                 if(reverse&&!this.reversed) {
                     long temp = this.startTime;
                     setNewTransition(transition, delays, true);
-                    if(transition.getXDriver()!=null)
-                        this.beginX = transition.getXDriver().getTargetValue();
-                    if(transition.getYDriver()!=null)
-                        this.beginY = transition.getYDriver().getTargetValue();
-                    if(transition.getWidthDriver()!=null)
-                        this.beginWidth = transition.getWidthDriver().getTargetValue();
-                    if(transition.getHeightDriver()!=null)
-                        this.beginHeight = transition.getHeightDriver().getTargetValue();
-                    if(transition.getAlphaDriver()!=null)
-                        this.beginAlpha = transition.getAlphaDriver().getTargetValue();
+                    setReverseTransitionParameters(transition);
                     this.startTime = (long) (Core.timings.getTotalMilliseconds() -
                             ((transition.getTotalTime()*1000)-(Core.timings.getTotalMilliseconds()-temp)));
                 } else if(!reverse&&this.reversed){
@@ -65,16 +54,7 @@ public class Animator {
                     long temp = this.startTime;
                     setNewTransition(transition, delays, reverse);
                     if(reverse) {
-                        if(transition.getXDriver()!=null)
-                            this.beginX = transition.getXDriver().getTargetValue();
-                        if(transition.getYDriver()!=null)
-                            this.beginY = transition.getYDriver().getTargetValue();
-                        if(transition.getWidthDriver()!=null)
-                            this.beginWidth = transition.getWidthDriver().getTargetValue();
-                        if(transition.getHeightDriver()!=null)
-                            this.beginHeight = transition.getHeightDriver().getTargetValue();
-                        if(transition.getAlphaDriver()!=null)
-                            this.beginAlpha = transition.getAlphaDriver().getTargetValue();
+                        setReverseTransitionParameters(transition);
                     }
                     this.startTime = temp;
                 }
@@ -83,21 +63,43 @@ public class Animator {
     }
 
     private void setNewTransition(Transition transition, DelayHolder delays, boolean reverse) {
-        this.transition = transition;
-        if(transition.getXDriver()!=null)
-            this.beginX = transition.getXDriver().getStartValue();
-        if(transition.getYDriver()!=null)
-            this.beginY = transition.getYDriver().getStartValue();
-        if(transition.getWidthDriver()!=null)
-            this.beginWidth = transition.getWidthDriver().getStartValue();
-        if(transition.getHeightDriver()!=null)
-            this.beginHeight = transition.getHeightDriver().getStartValue();
-        if(transition.getAlphaDriver()!=null)
-            this.beginAlpha = transition.getAlphaDriver().getStartValue();
-        this.delay = (long) (delays.startDelay*1000);
-        this.startTime = Core.timings.getTotalMilliseconds();
-        this.reversed = reverse;
-        playingCurrent = true;
+        if(!reverse) {
+            this.transition = transition;
+            if (transition.getXDriver() != null)
+                this.beginX = transition.getXDriver().getStartValue();
+            if (transition.getYDriver() != null)
+                this.beginY = transition.getYDriver().getStartValue();
+            if (transition.getWidthDriver() != null)
+                this.beginWidth = transition.getWidthDriver().getStartValue();
+            if (transition.getHeightDriver() != null)
+                this.beginHeight = transition.getHeightDriver().getStartValue();
+            if (transition.getAlphaDriver() != null)
+                this.beginAlpha = transition.getAlphaDriver().getStartValue();
+            this.delay = (long) (delays.startDelay * 1000);
+            this.startTime = Core.timings.getTotalMilliseconds();
+            this.reversed = false;
+            playingCurrent = true;
+        } else {
+            this.transition = transition;
+            setReverseTransitionParameters(transition);
+            this.delay = (long) (delays.startDelay * 1000);
+            this.startTime = Core.timings.getTotalMilliseconds();
+            this.reversed = true;
+            playingCurrent = true;
+        }
+    }
+
+    private void setReverseTransitionParameters(Transition transition) {
+        if (transition.getXDriver() != null)
+            this.beginX = transition.getXDriver().getTargetValue();
+        if (transition.getYDriver() != null)
+            this.beginY = transition.getYDriver().getTargetValue();
+        if (transition.getWidthDriver() != null)
+            this.beginWidth = transition.getWidthDriver().getTargetValue();
+        if (transition.getHeightDriver() != null)
+            this.beginHeight = transition.getHeightDriver().getTargetValue();
+        if (transition.getAlphaDriver() != null)
+            this.beginAlpha = transition.getAlphaDriver().getTargetValue();
     }
 
     long elapsed;

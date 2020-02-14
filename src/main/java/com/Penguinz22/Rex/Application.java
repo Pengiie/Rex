@@ -1,6 +1,5 @@
 package com.Penguinz22.Rex;
 
-import com.Penguinz22.Rex.graphics.Draw;
 import com.Penguinz22.Rex.graphics.Mesh;
 import com.Penguinz22.Rex.listeners.ApplicationListener;
 import com.Penguinz22.Rex.utils.Disposable;
@@ -91,10 +90,6 @@ public class Application implements Disposable {
     public void dispose() {
         if(Core.assets != null)
             Core.assets.dispose();
-        if(Core.renderer != null)
-            Core.renderer.dispose();
-        if(Core.guiRenderer != null)
-            Core.guiRenderer.dispose();
         listener.dispose();
         Mesh.disposeMeshes();
     }

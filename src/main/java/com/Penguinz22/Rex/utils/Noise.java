@@ -3,7 +3,7 @@ package com.Penguinz22.Rex.utils;
 import org.joml.Math;
 
 public class Noise {
-    static public double noise(double x, double y, double z) {
+    public static double noise(double x, double y, double z) {
         int X = (int)Math.floor(x) & 255,                  // FIND UNIT CUBE THAT
                 Y = (int)Math.floor(y) & 255,                  // CONTAINS POINT.
                 Z = (int)Math.floor(z) & 255;

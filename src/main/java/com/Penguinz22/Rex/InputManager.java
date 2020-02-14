@@ -2,13 +2,11 @@ package com.Penguinz22.Rex;
 
 import com.Penguinz22.Rex.utils.Key;
 import org.joml.Vector2f;
-import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,6 +16,7 @@ public class InputManager {
 
     private HashMap<Key, List<Modifier>> keyPresses = new HashMap();
     private HashMap<Key, List<Modifier>> keyHolds = new HashMap<>();
+    private HashMap<Key, List<Modifier>> keyHoldsDelayed = new HashMap<>();
     private HashMap<Key, List<Modifier>> keyReleases = new HashMap<>();
 
     private Vector2f mousePosition = new Vector2f(0, 0);
@@ -53,9 +52,12 @@ public class InputManager {
                 keyPresses.put(key, modifiers);
                 keyHolds.put(key, modifiers);
             } else if(action == GLFW.GLFW_REPEAT)
-                keyHolds.put(key, modifiers);
-            else if(action == GLFW.GLFW_RELEASE)
+                keyHoldsDelayed.put(key, modifiers);
+            else if(action == GLFW.GLFW_RELEASE) {
                 keyReleases.put(key, modifiers);
+                if(keyHolds.containsKey(key))
+                    keyHolds.remove(key);
+            }
         }
     };
 
@@ -94,6 +96,7 @@ public class InputManager {
         mousePresses.clear();
         mouseReleases.clear();
         keyPresses.clear();
+        keyHoldsDelayed.clear();
         keyReleases.clear();
     }
 
@@ -111,10 +114,27 @@ public class InputManager {
     public boolean isKeyDown(Key key, Modifier... modifiers) {
         if(keyHolds.containsKey(key)) {
             for (Modifier modifier : modifiers) {
-                if(!keyPresses.get(key).contains(modifier))
+                if(!keyHolds.get(key).contains(modifier))
                     return false;
-                return true;
             }
+            return true;
+        }
+        return false;
+    }
+
+    /** Appears after holding down the key for a slight bit
+     *
+     * @param key
+     * @param modifiers
+     * @return
+     */
+    public boolean isKeyHeld(Key key, Modifier... modifiers) {
+        if(keyHoldsDelayed.containsKey(key)) {
+            for (Modifier modifier : modifiers) {
+                if(!keyHoldsDelayed.get(key).contains(modifier))
+                    return false;
+            }
+            return true;
         }
         return false;
     }
@@ -124,8 +144,8 @@ public class InputManager {
             for (Modifier modifier : modifiers) {
                 if(!keyPresses.get(key).contains(modifier))
                     return false;
-                return true;
             }
+            return true;
         }
         return false;
     }

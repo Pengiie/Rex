@@ -3,7 +3,6 @@ package com.Penguinz22.RexTester;
 import com.Penguinz22.Rex.Application;
 import com.Penguinz22.Rex.ApplicationConfig;
 import com.Penguinz22.Rex.Core;
-import com.Penguinz22.Rex.assets.AssetLoadedCallback;
 import com.Penguinz22.Rex.assets.AssetManager;
 import com.Penguinz22.Rex.assets.Font;
 import com.Penguinz22.Rex.assets.Texture;
@@ -12,14 +11,11 @@ import com.Penguinz22.Rex.graphics.Draw;
 import com.Penguinz22.Rex.gui.GuiRenderer;
 import com.Penguinz22.Rex.gui.animation.SlideTransition;
 import com.Penguinz22.Rex.gui.animation.Transition;
-import com.Penguinz22.Rex.gui.animation.TransitionDriver;
 import com.Penguinz22.Rex.gui.components.*;
 import com.Penguinz22.Rex.gui.constraints.*;
 import com.Penguinz22.Rex.listeners.ApplicationListener;
 import com.Penguinz22.Rex.utils.Color;
 import com.Penguinz22.Rex.utils.fonts.TextAlignment;
-import org.graalvm.compiler.lir.LIRInstruction;
-import org.graalvm.compiler.nodes.NodeView;
 
 public class GuiTest implements ApplicationListener {
 
@@ -32,9 +28,11 @@ public class GuiTest implements ApplicationListener {
 
     private final Transition DEFAULT_TRANSITION = new Transition().setAlphaDriver(new SlideTransition(0, 1, 0.25f));
 
+    GuiRenderer guiRenderer;
+
     @Override
     public void init() {
-        Core.guiRenderer = new GuiRenderer();
+        guiRenderer = new GuiRenderer();
         Core.assets = new AssetManager(true);
 
         Core.assets.load("test.png", Texture.class);
@@ -123,12 +121,12 @@ public class GuiTest implements ApplicationListener {
         playButton.setMouseLeaveCallback(() -> {
             playButton.getAnimator().playTransition(transition, true);
         });
-        Core.guiRenderer.screenComponent.add(playButton, constraints);
+        guiRenderer.screenComponent.add(playButton, constraints);
 
         constraints.setYConstraint(new PixelConstraint(50));
 
         GuiBlock blockblock = new GuiBlock(Color.orange);
-        Core.guiRenderer.screenComponent.add(blockblock, constraints);
+        guiRenderer.screenComponent.add(blockblock, constraints);
         GuiTextBox textBox = new GuiTextBox(Core.assets.get("comic.ttf"), Color.black, Color.black, false);
 
         blockblock.add(new GuiBlock(Color.white),
@@ -141,18 +139,18 @@ public class GuiTest implements ApplicationListener {
 
     @Override
     public void resize(int width, int height) {
-        Core.guiRenderer.resized(width, height);
+        guiRenderer.resized(width, height);
     }
 
     @Override
     public void update() {
         Core.assets.update();
-        Core.guiRenderer.updateScreen();
+        guiRenderer.updateScreen();
     }
 
     @Override
     public void render() {
         Draw.clear();
-        Core.guiRenderer.renderScreen();
+        guiRenderer.renderScreen();
     }
 }

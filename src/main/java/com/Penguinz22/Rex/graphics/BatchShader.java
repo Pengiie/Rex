@@ -10,6 +10,8 @@ public class BatchShader {
     public static final String TEXTURE_UNIT_SIZE_UNIFORM = "u_textureUnitSize";
     public static final String TEXTURE_HAS_UNIFORM = "u_hasTexture";
 
+    public static final String ORTHO_VIEW_TRANSFORMATION_MATRIX = "u_orthoViewTransformation";
+
     private static final String vertexShader =
             Strings.join("\n",
                     "attribute vec2 "+Shader.POSITION_ATTRIBUTE+";",
@@ -17,12 +19,12 @@ public class BatchShader {
                     "",
                     "out vec2 "+BatchShader.PASS_TEXTURE_COORDS+";",
                     "",
-                    "uniform mat4 "+Shader.COMBINED_MATRIX_UNIFORM+";",
+                    "uniform mat4 "+BatchShader.ORTHO_VIEW_TRANSFORMATION_MATRIX +";",
                     "uniform vec2 "+BatchShader.TEXTURE_OFFSET_UNIFORM+";",
                     "uniform vec2 "+BatchShader.TEXTURE_UNIT_SIZE_UNIFORM+";",
                     "",
                     "void main(){",
-                    "    gl_Position = "+Shader.COMBINED_MATRIX_UNIFORM+"*vec4("+Shader.POSITION_ATTRIBUTE+", 0, 1);",
+                    "    gl_Position = "+ BatchShader.ORTHO_VIEW_TRANSFORMATION_MATRIX +"*vec4("+Shader.POSITION_ATTRIBUTE+", 0, 1);",
                     "    "+BatchShader.PASS_TEXTURE_COORDS+" = "+BatchShader.TEXTURE_OFFSET_UNIFORM+"+("+BatchShader.TEXTURE_UNIT_SIZE_UNIFORM+"*"+Shader.TEXTURE_COORD_ATTRIBUTE+");",
                     "}");
 

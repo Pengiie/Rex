@@ -11,4 +11,12 @@ public class VectorUtils {
         return new Vector2f(vector2f.x, vector2f.y);
     }
 
+    public static float maxValue(Vector2f vector) {
+        return Math.max(vector.x, vector.y);
+    }
+
+    public static float minValue(Vector2f vector) {
+        return Math.min(vector.x, vector.y);
+    }
+
 }

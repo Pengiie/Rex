@@ -2,7 +2,6 @@ package com.Penguinz22.Rex.utils;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 public class TransformationUtils {
 
@@ -14,6 +13,13 @@ public class TransformationUtils {
         if(rotation!=null)
             tempMatrix.rotateAroundLocal(rotation.quaternion, x+width*rotation.origin.x ,y+height*rotation.origin.y ,0);
         tempMatrix.scale(width, height, 1);
+        return new Matrix4f(tempMatrix);
+    }
+
+    public static Matrix4f createViewMatrix(float x, float y, float rotation) {
+        tempMatrix.identity();
+        tempMatrix.translate(-x, -y, 0);
+        tempMatrix.rotate(rotation, new Vector3f(0, 1, 0));
         return new Matrix4f(tempMatrix);
     }
 

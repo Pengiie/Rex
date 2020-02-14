@@ -1,11 +1,10 @@
 package com.Penguinz22.Rex.gui.animation;
 
-import com.Penguinz22.Rex.gui.constraints.Constraint;
-
 public class SlideTransition extends TransitionDriver {
 
     public SlideTransition(float startValue, float targetValue, float timeNeeded) {
         super(startValue, targetValue, timeNeeded);
+        // TODO: Allow for gui constraints such as relative constraint for start value and target value, will be relative to component that is being transitioned
     }
 
     @Override

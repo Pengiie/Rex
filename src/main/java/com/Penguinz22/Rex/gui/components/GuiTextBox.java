@@ -8,11 +8,11 @@ import com.Penguinz22.Rex.gui.constraints.FinalConstraint;
 import com.Penguinz22.Rex.gui.constraints.GuiConstraints;
 import com.Penguinz22.Rex.gui.constraints.RelativeConstraint;
 import com.Penguinz22.Rex.utils.Color;
+import com.Penguinz22.Rex.utils.CursorType;
 import com.Penguinz22.Rex.utils.Key;
-import com.Penguinz22.Rex.utils.annotations.RenderOrder;
 import com.Penguinz22.Rex.utils.annotations.Order;
+import com.Penguinz22.Rex.utils.annotations.RenderOrder;
 import com.Penguinz22.Rex.utils.fonts.TextAlignment;
-import org.graalvm.compiler.nodes.spi.Lowerable;
 
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -140,6 +140,9 @@ public class GuiTextBox extends GuiComponent {
             else visibleText += character;
         }
         guiText.text = visibleText;
+        if(password) {
+
+        }
 
         // Adjust overflow if cursorPos requires
         if(cursorPos - textOffset < 0)
@@ -149,7 +152,12 @@ public class GuiTextBox extends GuiComponent {
 
         int textWidthBeforeCursor = guiText.font.getTextWidth(getSeparatedGuiText(cursorPos - textOffset)[0], scale, false);
         this.cursorConstraints.getXConstraint().pixelOffset = textWidthBeforeCursor + 1;
+
+        if(this.isMouseHovering())
+            Core.window.updateCurrentCursorType(CursorType.TEXT_INPUT);
     }
+
+
 
     @Override
     @RenderOrder(Order.AFTER)
@@ -170,17 +178,17 @@ public class GuiTextBox extends GuiComponent {
     private String[] getSeparatedText(int index) {
         if(index == 0) {
             return new String[] {"", text};
-        } else {
-            return new String[] {text.substring(0, index), text.substring(index, text.length())};
-        }
+        } else if(index >= 0 || index <= text.length()){
+            return new String[] {text.substring(0, index), text.substring(index)};
+        } else return new String[] {text, ""};
     }
 
     private String[] getSeparatedGuiText(int index) {
         if(index == 0) {
             return new String[] {"", guiText.text};
-        } else {
-            return new String[] {guiText.text.substring(0, index), guiText.text.substring(index, guiText.text.length())};
-        }
+        } else if(index >= 0 && index <= guiText.text.length()){
+            return new String[] {guiText.text.substring(0, index), guiText.text.substring(index)};
+        } else return new String[] {guiText.text, ""};
     }
 
     public void setText(String text) {

@@ -1,8 +1,5 @@
 package com.Penguinz22.Rex;
 
-import com.Penguinz22.Rex.Application;
-import com.Penguinz22.Rex.ApplicationConfig;
-import com.Penguinz22.Rex.Core;
 import com.Penguinz22.Rex.listeners.ApplicationListener;
 import com.Penguinz22.Rex.listeners.WindowListener;
 import com.Penguinz22.Rex.utils.CursorType;
@@ -10,7 +7,6 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWWindowCloseCallback;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.system.Callback;
 
 public class Window {
 
@@ -46,6 +42,8 @@ public class Window {
     private long handCursor;
     private long textInputCursor;
 
+    private CursorType currentCursor = CursorType.NORMAL;
+
     public Window(ApplicationListener listener, ApplicationConfig config) {
         this.listener = listener;
         this.config = config;
@@ -80,7 +78,12 @@ public class Window {
         this.textInputCursor = GLFW.glfwCreateStandardCursor(CursorType.TEXT_INPUT.getGlfwEquivalent());
     }
 
-    public void setCursor(CursorType type) {
+    // Update every frame
+    public void updateCurrentCursorType(CursorType type) {
+        this.currentCursor = type;
+    }
+
+    private void setCursor(CursorType type) {
         if(type == CursorType.NORMAL)
             GLFW.glfwSetCursor(windowHandle, normalCursor);
         else if(type == CursorType.SELECT_HAND)
@@ -102,8 +105,12 @@ public class Window {
             listener.init();
             initializedListener = true;
         }
+        setCursor(currentCursor);
+        currentCursor = CursorType.NORMAL;
+
         GLFW.glfwSwapBuffers(windowHandle);
         GLFW.glfwPollEvents();
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
     }
 
     public void closeWindow(){

@@ -35,15 +35,17 @@ public abstract class GuiButton extends GuiComponent {
         constraints.setHeightConstraint(new RelativeConstraint(0.9f));
         this.add(text, constraints);
 
+        super.setMouseEnterCallback(() -> {
+            if(mouseEnterCallback != null)
+                mouseEnterCallback.run();
+        });
+
+        super.setMouseLeaveCallback(() -> {
+            if(mouseLeaveCallback != null)
+                mouseLeaveCallback.run();
+        });
+
         this.setMouseClickCallback(() -> onClick(Core.input.getMousePosX(), Core.input.getMousePosY()));
-
-        this.setMouseEnterCallback(() -> {
-            text.setColor(new Color(baseColor.r * 0.75f, baseColor.g * 0.75f, baseColor.b * 0.75f, baseColor.a));
-        });
-
-        this.setMouseLeaveCallback(() -> {
-            text.setColor(baseColor);
-        });
     }
 
     public GuiButton(GuiComponent base, GuiText text, GuiComponent hoverBase, GuiText hoverText) {
@@ -81,8 +83,11 @@ public abstract class GuiButton extends GuiComponent {
             base.setVisible(false);
             hoverBase.setVisible(true);
 
-            if(mouseEnterCallback != null)
+            System.out.println("test");
+            if(mouseEnterCallback != null) {
                 mouseEnterCallback.run();
+
+            }
         });
 
         super.setMouseLeaveCallback(() -> {
